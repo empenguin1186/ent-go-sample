@@ -1,0 +1,5 @@
+.env
+db/
+.idea
+main
+ent-go-sample.iml
