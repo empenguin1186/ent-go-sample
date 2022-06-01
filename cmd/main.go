@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"ent-go-sample/domain/model"
 	"ent-go-sample/ent"
+	"ent-go-sample/infra"
 	"fmt"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -38,18 +40,6 @@ func main() {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
 
-	CreateUser(context.Background(), client)
-}
-
-func CreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
-	u, err := client.User.
-		Create().
-		SetAge(30).
-		SetName("a8m").
-		Save(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed creating user: %w", err)
-	}
-	log.Println("user was created: ", u)
-	return u, nil
+	repository := infra.NewUserRepositoryImpl(client, context.Background())
+	repository.Create(&model.User{Age: 10, Name: "hoge"})
 }
