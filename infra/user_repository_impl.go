@@ -4,6 +4,8 @@ import (
 	"context"
 	"ent-go-sample/domain/model"
 	"ent-go-sample/ent"
+	"ent-go-sample/ent/user"
+	"github.com/prometheus/common/log"
 )
 
 type UserRepositoryImpl struct {
@@ -25,16 +27,25 @@ func (u *UserRepositoryImpl) Create(user *model.User) error {
 }
 
 func (u *UserRepositoryImpl) FindById(id int) (*model.User, error) {
-	//TODO implement me
-	panic("implement me")
+	user, err := u.client.User.
+		Query().
+		Select(user.FieldID, user.FieldAge, user.FieldName).
+		Where(user.IDEQ(id)).
+		First(u.context)
+
+	if err != nil {
+		log.Errorf("failed to findbyId on user table, err = %w", err)
+		return nil, err
+	}
+
+	return &model.User{ID: user.ID, Name: user.Name, Age: user.Age}, nil
 }
 
 func (u *UserRepositoryImpl) Delete(id int) error {
-	//TODO implement me
-	panic("implement me")
+	return u.client.User.DeleteOneID(id).Exec(u.context)
 }
 
 func (u *UserRepositoryImpl) Update(user *model.User) error {
-	//TODO implement me
-	panic("implement me")
+	input := ent.User{ID: user.ID, Age: user.Age, Name: user.Name}
+	return u.client.User.UpdateOne(&input).Exec(u.context)
 }
