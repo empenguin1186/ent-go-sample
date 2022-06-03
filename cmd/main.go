@@ -47,14 +47,4 @@ func main() {
 		fmt.Printf("find error occurred, err = %v", err)
 	}
 	fmt.Printf("user = %#v", result)
-
-	err = repository.Update(&model.User{ID: 1, Age: 11, Name: "fuga"})
-	if err != nil {
-		fmt.Printf("update error occurred, err = %v", err)
-	}
-
-	err = repository.Delete(1)
-	if err != nil {
-		fmt.Printf("delete error occurred, err = %v", err)
-	}
 }
